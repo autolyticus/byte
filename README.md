@@ -1,6 +1,6 @@
 # Vox
 
-Records a Vox(A 5 second audio clip) to share with your friends
+Records a Vox(A 10 second audio clip) to share with your friends
 
 
 
