@@ -41,6 +41,14 @@ NavigationLayout:
             icon: 'record'
             text: 'Record a Vox'
             on_release: root.ids.scr_mngr.current = 'record'
+        NavigationDrawerIconButton:
+            icon: 'file-find'
+            text: 'Send to friend'
+            on_release: root.ids.scr_mngr.current = 'send'
+        NavigationDrawerIconButton:
+            icon: 'settings'
+            text: 'Settings'
+            on_release: root.ids.scr_mngr.current = 'settings'
         NavigationDrawerToolbar:
     BoxLayout:
         orientation: 'vertical'
@@ -58,6 +66,8 @@ NavigationLayout:
                 name: 'main'
                 BoxLayout:
                     orientation: 'horizontal'
+                    Image:
+                        source: 'assets/main.jpg'
                     MDLabel:
                         text: 'Welcome to Vox\nTo begin, press the hamburger menu and click Record a vox\n'
                         halign: 'center'
@@ -72,4 +82,35 @@ NavigationLayout:
                         pos_hint: {'center_x': 0.5}
                         halign: 'center'
                         valign: 'center'
-                        on_press: app.record()
+                        on_press: app.record(str(username.text))
+            Screen:
+                name: 'send'
+                BoxLayout:
+                    orientation: 'vertical'
+                    FileChooserListView:
+                        id: fileChooser
+                        path: '.'
+                        on_selection: filename.text = self.selection and self.selection[0] or ''
+                    MDTextField:
+                        id: filename
+                        hint_text: 'Choose a filename to send'
+                    MDRaisedButton:
+                        size_hint: None, None
+                        text: 'Send file'
+                        on_press: link.text = app.send(filename.text)
+                    BoxLayout:
+                        orientation: 'vertical'
+                        MDTextField:
+                            id: link
+                            hint_text: 'Your unique link will be generated here'
+                            # size_hint: None, None
+            Screen:
+                name: 'settings'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    MDTextField:
+                        id: username
+                        hint_text: 'Choose a unique username'
+                        text: 'user123'
+                        halign: 'center'
+                        valign: 'center'

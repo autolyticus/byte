@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
 import sys
+import os
 import datetime
 sys.path.append('./kivymd')
 
@@ -28,16 +29,18 @@ import sqlite3
 # from plyer.facades import Orientation
 # from kivymd.time_picker import MDTimePicker
 
+from upload import TransferData
+
 
 class SimpleApp(App):
     theme_cls = ThemeManager()
-    theme_cls.theme_style = 'Light'
+    theme_cls.theme_style = 'Dark'
     theme_cls.primary_palette = 'Indigo'
 
     def build(self, ):
         main_widget = Builder.load_file('./mdkvfile.kv')
         self.conn = sqlite3.connect('database.db')
-        self.username = 'user123'
+        self.dpbox = TransferData()
         try:
             self.conn.execute(''' CREATE TABLE vox
                                 (username text, timestamp text unique, data text);
@@ -46,19 +49,27 @@ class SimpleApp(App):
             pass
         return main_widget
 
-    def insertFile(self, fileData):
+    def insertFile(self, fileData, username):
         query = '''INSERT INTO vox
                 (username, timestamp, data) VALUES (?,?,?)'''
         cur =self.conn.cursor()
-        cur.execute(query, (self.username, str(datetime.datetime.now()), fileData))
+        cur.execute(query, (str(username), str(datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')), fileData))
         self.conn.commit()
 
-    def record(self, ):
-        p = subprocess.Popen(shlex.split('python2 soundRecord.py'))
+    def send(self, fileName):
+        # print(os.path.basename(fileName))
+        return self.dpbox.upload_file(fileName, '/test_dropbox/' + os.path.basename(fileName))
+
+    # def generateLink(self, fileName):
+        # self.dpbox.
+
+
+    def record(self, username):
+        p = subprocess.Popen(shlex.split('python2 soundRecord.py %s' % username))
         p.wait()
         with open('output.wav') as f:
             a = f.read()
-            self.insertFile(a)
+            self.insertFile(a, username)
 
 
 if __name__ == '__main__':

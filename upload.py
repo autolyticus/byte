@@ -16,6 +16,8 @@ class TransferData:
         with open(file_from, 'rb') as f:
             dbx.files_upload(f.read(), file_to)
 
+        return dbx.files_get_temporary_link(file_to).link
+
     def download_file(self, file_from):
         dbx = dropbox.Dropbox(self.access_token)
         metadata, f = dbx.files_download(file_from)

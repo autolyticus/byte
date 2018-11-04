@@ -4,13 +4,15 @@
 
 import pyaudio
 import wave
+import datetime
+import sys
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
 RECORD_SECONDS = 5
-WAVE_OUTPUT_FILENAME = "output.wav"
+WAVE_OUTPUT_FILENAME = "recordings/record-%s-%s.wav" % (sys.argv[1], datetime.datetime.now())
 
 p = pyaudio.PyAudio()
 
