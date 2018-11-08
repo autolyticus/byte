@@ -1,5 +1,4 @@
 .mypy_cache/
 database.db
-output.wav
 *.out
 *.pyc
